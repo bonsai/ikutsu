@@ -5,6 +5,7 @@ import os
 import base64
 import mimetypes
 import traceback
+import requests
 from flask import Flask, request, render_template, jsonify
 from dotenv import load_dotenv
 
