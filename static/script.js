@@ -80,9 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const data = await response.json();
 
+            // 保存截图URL
+            window.latestScreenshotUrl = data.screenshot_url || '';
+
             // ローディング終了（最低3秒は表示）
             setTimeout(() => {
-                loadingOverlay.classList.remove('show');
+                document.getElementById('loadingOverlay').classList.remove('show');
                 if (data.error) {
                     alert('エラー: ' + data.error);
                     document.getElementById('startBtn').style.display = 'block';
@@ -143,9 +146,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.shareTwitter = function() {
         const age = resultAge.textContent;
-        const text = encodeURIComponent(`ねえあたし、いくつに見える？\n${age}歳に見えました🌸\n#いくつに見える #AI年齢推定`);
-        const url = encodeURIComponent(window.location.href);
-        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        const baseText = `ねえあたし、いくつに見える？${age}歳に見えました🌸`;
+        const hashtags = `#いくつに見える #AI年齢推定`;
+
+        // 如果有截图，用截图URL；否则用当前页面URL
+        let shareUrl = window.location.href;
+        if (window.latestScreenshotUrl) {
+            shareUrl = window.location.origin + window.latestScreenshotUrl;
+        }
+
+        const fullText = `${baseText}\n${hashtags}`;
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+    }
+
+    window.copyResult = function() {
+        const age = resultAge.textContent;
+        const text = `ねえあたし、いくつに見える？${age}歳に見えました🌸\n#いくつに見える #AI年齢推定`;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('結果をコピーしました！');
+        }).catch(err => {
+            // フォールバック
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('結果をコピーしました！');
+        });
     }
 
     // フローティング桜作成（数量増加・多様な動き）
@@ -223,4 +251,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }, i * 20);
         }
     }
+
+    // 自动启动相机
+    window.addEventListener('load', function() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            window.startCamera();
+        }
+    });
 });

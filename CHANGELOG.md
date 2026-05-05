@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 ### Added
+- 相机自动启动（页面加载即打开摄像头）
+- 结果截图保存与分享（截图URL + 文字分享）
+- 纯文字分享（コピー按钮）
 - 相机自拍镜像翻转（左←→右 反转）
-- Twitter/X 分享按钮
+- Twitter/X 分享按钮（支持图片URL + 纯文字）
 - GitHub Project Kanban 设置
 
 ### Fixed
