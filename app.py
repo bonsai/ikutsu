@@ -1,7 +1,10 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import os
 import base64
 import mimetypes
-import requests
+import traceback
 from flask import Flask, request, render_template, jsonify
 from dotenv import load_dotenv
 
@@ -12,6 +15,8 @@ app = Flask(__name__)
 TOKEN = os.getenv("SAKURA_API_TOKEN", "")
 if not TOKEN:
     print("Warning: SAKURA_API_TOKEN not set", file=sys.stderr)
+
+app.config['DEBUG'] = True
 API_BASE = "https://api.ai.sakura.ad.jp/v1"
 
 
@@ -22,11 +27,14 @@ def index():
 
 @app.route("/estimate", methods=["POST"])
 def estimate_age():
+    print(f"[DEBUG] Request received: {request.files}", flush=True)
     if "image" not in request.files:
+        print("[DEBUG] No image in request", flush=True)
         return jsonify({"error": "画像がありません"}), 400
 
     file = request.files["image"]
     if not file.filename:
+        print("[DEBUG] Empty filename", flush=True)
         return jsonify({"error": "ファイルがありません"}), 400
 
     mime_type = file.content_type or mimetypes.guess_type(file.filename)[0] or "image/jpeg"
@@ -44,6 +52,7 @@ def estimate_age():
     ]
 
     try:
+        print(f"[DEBUG] Calling API with token: {TOKEN[:10]}...", flush=True)
         resp = requests.post(
             f"{API_BASE}/chat/completions",
             headers={"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"},
@@ -55,12 +64,16 @@ def estimate_age():
             },
             timeout=60,
         )
+        print(f"[DEBUG] API response status: {resp.status_code}", flush=True)
         resp.raise_for_status()
         result = resp.json()["choices"][0]["message"]["content"].strip()
+        print(f"[DEBUG] API result: {result}", flush=True)
         return jsonify({"age": result})
     except Exception as e:
+        error_detail = traceback.format_exc()
+        print(f"[DEBUG] Error: {e}\n{error_detail}", flush=True)
         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)

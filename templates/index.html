@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- 背景の装飾 -->
+    <div style="position: fixed; top: -50px; left: -50px; font-size: 40px; opacity: 0.3; animation: floatSakura 8s ease-in-out infinite;">🌸</div>
+    <div style="position: fixed; top: 20%; right: -30px; font-size: 30px; opacity: 0.2; animation: floatSakura 6s ease-in-out infinite 1s;">🌸</div>
+    <div style="position: fixed; bottom: 10%; left: 5%; font-size: 35px; opacity: 0.25; animation: floatSakura 7s ease-in-out infinite 2s;">🌸</div>
+    <div style="position: fixed; bottom: -40px; right: 30%; font-size: 45px; opacity: 0.2; animation: floatSakura 9s ease-in-out infinite 3s;">🌸</div>
+
     <div class="container" id="mainContainer">
         <h1>ねえあたし、いくつに見える？</h1>
         <p class="subtitle">カメラで写真を撮って年齢を推定</p>
@@ -33,6 +39,7 @@
 
     <!-- 結果画面 -->
     <div class="result-overlay" id="resultOverlay">
+        <div style="font-size: 60px; margin-bottom: 20px; animation: floatSakura 2s ease-in-out infinite;">🌸</div>
         <div class="result-age" id="resultAge">0</div>
         <div class="result-text">歳に見えます</div>
         <button class="retry-btn" onclick="retry()">もう一度</button>
