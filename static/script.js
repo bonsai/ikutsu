@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.shareTwitter = function() {
         const age = resultAge.textContent;
         const baseText = `ねえあたし、いくつに見える？${age}歳に見えました🌸`;
-        const hashtags = `#生成AIなんでも展示会\n#いくつに見える #AI年齢推定 #BonsaiApps`;
+        const hashtags = `#生成AIなんでも展示会\n#いくつに見える #AI年齢推定 #VonsaiApps`;
         const shareUrl = 'https://ikutsu.onrender.com/';
 
         const fullText = `${baseText}\n${hashtags}`;
