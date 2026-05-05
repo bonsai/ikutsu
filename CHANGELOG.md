@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- 相机自拍镜像翻转（左←→右 反转）
+- Twitter/X 分享按钮
+- GitHub Project Kanban 设置
+
+### Fixed
+- `ageEl` 未定义错误 → 改为 `resultAge`
+- `import requests` / `import sys` 缺失
+- API_BASE URL 拼写检查
+- 相机预览与拍照镜像同步
+
 ## [2.15.1] - 2026-03-27
 
 ### Fixed

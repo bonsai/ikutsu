@@ -20,6 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const video = document.getElementById('cameraPreview');
             video.srcObject = stream;
+            // 自拍时镜像翻转（前摄像头）
+            if (facingMode === 'user') {
+                video.style.transform = 'scaleX(-1)';
+            } else {
+                video.style.transform = 'none';
+            }
             document.getElementById('cameraArea').classList.add('show');
             document.getElementById('startBtn').style.display = 'none';
         } catch (err) {
@@ -41,6 +47,11 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
+        // 如果是镜像（自拍），拍照时也要翻转，让照片和预览一致
+        if (facingMode === 'user') {
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+        }
         ctx.drawImage(video, 0, 0);
 
         canvas.toBlob(function(blob) {
@@ -128,6 +139,13 @@ document.addEventListener('DOMContentLoaded', function() {
         resultOverlay.classList.remove('show');
         document.getElementById('startBtn').style.display = 'block';
         resultAge.textContent = '0';
+    }
+
+    window.shareTwitter = function() {
+        const age = resultAge.textContent;
+        const text = encodeURIComponent(`ねえあたし、いくつに見える？\n${age}歳に見えました🌸\n#いくつに見える #AI年齢推定`);
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
     }
 
     // フローティング桜作成（数量増加・多様な動き）
