@@ -133,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function() {
         resultOverlay.classList.remove('show');
         document.getElementById('startBtn').style.display = 'block';
         resultAge.textContent = '0';
+        // 細かいテキストを削除
+        const details = resultOverlay.querySelector('div[style*="margin-top: 20px"]');
+        if (details) details.remove();
         // 10秒後に自動的に最初に戻る
         clearTimeout(window.autoRetryTimer);
         window.autoRetryTimer = setTimeout(() => {
@@ -143,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.startCamera();
         }, 10000);
         window.startCamera();
-    }
+    };
 
     // 結果表示時にタイマーセット
     const originalShowResult = window.showResult;
@@ -155,6 +158,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.retry();
             }
         }, 10000);
+
+        // 細かいテキストを結果画面の後に表示
+        const details = document.createElement('div');
+        details.style.marginTop = '20px';
+        details.style.fontSize = '12px';
+        details.style.color = '#888';
+        details.style.lineHeight = '1.6';
+        details.innerHTML = `
+            <p>※推定結果はAIによるもので、実際の年齢と異なる場合があります</p>
+            <p>※Sakura AI Engine APIを使用</p>
+            <p>※モデル: preview/Qwen3-VL-30B-A3B-Instruct</p>
+        `;
+        resultOverlay.appendChild(details);
     };
 
     window.sendFeedback = function(type) {
