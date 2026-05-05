@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const stepTime = duration / target;
         const timer = setInterval(() => {
             current++;
-            ageEl.textContent = current;
+            resultAge.textContent = current;
             if (current >= target) {
                 clearInterval(timer);
             }
