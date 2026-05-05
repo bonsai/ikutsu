@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>いくつに見える？</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>ねえあたし、いくつに見える？</h1>
+        <p class="subtitle">カメラで写真を撮って年齢を推定</p>
+
+        <button class="start-btn" id="startBtn" onclick="startCamera()">カメラを起動</button>
+
+        <div class="camera-area" id="cameraArea">
+            <video id="cameraPreview" autoplay playsinline></video>
+            <button class="switch-btn" onclick="switchCamera()">切替</button>
+            <div class="capture-btn" onclick="capture()"></div>
+        </div>
+    </div>
+
+    <canvas id="captureCanvas" style="display:none;"></canvas>
+
+    <!-- ローディング画面 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="sakura-beat">🌸</div>
+        <div class="loading-text" id="loadingText">ドキドキ…</div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-age" id="resultAge">0</div>
+        <div class="result-text">歳に見えます</div>
+        <button class="retry-btn" onclick="retry()">もう一度</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

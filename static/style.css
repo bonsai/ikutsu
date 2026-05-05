@@ -1,0 +1,232 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+}
+.container {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+.camera-area {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #f0f0f0;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+    display: none;
+}
+.camera-area.show {
+    display: block;
+}
+#cameraPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.capture-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #667eea;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.capture-btn:hover {
+    transform: translateX(-50%) scale(1.1);
+}
+.capture-btn::after {
+    content: '';
+    width: 54px;
+    height: 54px;
+    background: #667eea;
+    border-radius: 50%;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.start-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    font-size: 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-bottom: 20px;
+}
+.start-btn:hover {
+    transform: translateY(-2px);
+}
+.switch-btn {
+    background: rgba(255,255,255,0.9);
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+/* ローディング画面 */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: bgPulse 2s ease-in-out infinite;
+}
+.loading-overlay.show {
+    display: flex;
+}
+@keyframes bgPulse {
+    0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    50% { background: linear-gradient(135deg, #ffb7c5 0%, #c44569 100%); }
+}
+.sakura-beat {
+    font-size: 80px;
+    animation: sakurabeat 1s ease-in-out infinite;
+}
+@keyframes sakurabeat {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    15% { transform: scale(1.2) rotate(-5deg); }
+    30% { transform: scale(1) rotate(0deg); }
+    45% { transform: scale(1.15) rotate(5deg); }
+    60% { transform: scale(1) rotate(0deg); }
+}
+.loading-text {
+    color: white;
+    font-size: 24px;
+    margin-top: 30px;
+    animation: textFloat 3s ease-in-out infinite;
+}
+@keyframes textFloat {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-10px); opacity: 0.8; }
+}
+.progress-bar {
+    width: 200px;
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    margin-top: 40px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 2px;
+    animation: progressMove 3s ease-in-out infinite;
+}
+@keyframes progressMove {
+    0% { width: 0%; margin-left: 0; }
+    50% { width: 70%; margin-left: 15%; }
+    100% { width: 0%; margin-left: 100%; }
+}
+/* 結果画面 */
+.result-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.result-overlay.show {
+    display: flex;
+    animation: fadeIn 0.5s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.result-age {
+    font-size: 120px;
+    font-weight: bold;
+    color: #ffb7c5;
+    animation: countUp 1s ease-out;
+}
+@keyframes countUp {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.result-text {
+    color: white;
+    font-size: 24px;
+    margin-top: 20px;
+}
+.retry-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: background 0.3s;
+}
+.retry-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+.confetti {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: #ffb7c5;
+    border-radius: 50% 0 50% 0;
+    top: -10px;
+    animation: confettiFall 3s linear forwards;
+    z-index: 2001;
+}
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
