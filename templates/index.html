@@ -15,9 +15,9 @@
 
     <div class="container" id="mainContainer">
         <h1>ねえあたし、いくつに見える？</h1>
-        <p class="subtitle">#生成AIなんでも展示会<br>カメラで写真を撮って年齢を推定<br><strong>※写真は保存されません</strong><br>#VonsaiApps</p>
+        <p class="subtitle">#生成AIなんでも展示会<br>エージェントがあなたの年齢当ててみせるわ<br><strong>※写真は保存されません</strong><br>#VonsaiApps</p>
 
-        <button class="start-btn" id="startBtn" onclick="startCamera()">はじめる</button>
+        <button class="start-btn" id="startBtn" onclick="startCamera()">始める</button>
 
         <div class="camera-area" id="cameraArea">
             <video id="cameraPreview" autoplay playsinline></video>
@@ -48,7 +48,7 @@
             <button class="retry-btn" onclick="sendFeedback('correct')" style="margin:0; background: #28a745; border-color: #28a745;">だいたいあってる✅</button>
             <button class="retry-btn" onclick="sendFeedback('wrong')" style="margin:0; background: #dc3545; border-color: #dc3545;">ぜんぜんちがう❌</button>
         </div>
-        <div style="margin-top: 15px; font-size: 12px; color: #888; line-height: 1.6;">
+        <div style="margin-top: 15px; font-size: 12px; color: #888; line-height: 1.6; text-align: center;">
             <p>※推定結果はAIによるもので、実際の年齢と異なる場合があります</p>
             <p>※Sakura AI Engine APIを使用</p>
             <p>※モデル: preview/Qwen3-VL-30B-A3B-Instruct</p>
