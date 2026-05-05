@@ -23,9 +23,9 @@ if not TOKEN:
 app.config['DEBUG'] = True
 API_BASE = "https://api.ai.sakura.ad.jp/v1"
 
-# 評価保存関数
+# 评价保存函数（全局定义）
 def save_evaluation(age=None, emotion=None, correct=None, client_ip='unknown'):
-    """評価結果をファイルに保存"""
+    """评价结果をファイルに保存"""
     log_file = "evaluations.csv"
     file_exists = os.path.isfile(log_file)
     with open(log_file, mode='a', newline='', encoding='utf-8') as f:
@@ -34,9 +34,11 @@ def save_evaluation(age=None, emotion=None, correct=None, client_ip='unknown'):
             writer.writerow(['timestamp', 'age', 'emotion', 'correct', 'client_ip'])
         writer.writerow([datetime.datetime.now().isoformat(), age, emotion, correct, client_ip])
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/estimate", methods=["POST"])
 def estimate_age():
@@ -53,6 +55,8 @@ def estimate_age():
     mime_type = file.content_type or mimetypes.guess_type(file.filename)[0] or "image/jpeg"
     img_data = file.read()
     b64_img = base64.b64encode(img_data).decode("utf-8")
+
+    # 写真は保存しない（メモリ内のみ）
 
     messages = [
         {
@@ -109,7 +113,8 @@ def feedback():
             for row in reader:
                 rows.append(row)
         if len(rows) > 1:
-            rows[-1][3] = correct
+            # 最後のデータ行を更新
+            rows[-1][4] = correct  # 第5列がcorrect
             with open(log_file, mode='w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
                 writer.writerows(rows)
