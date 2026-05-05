@@ -72,6 +72,10 @@ def estimate_age():
         resp.raise_for_status()
         result = resp.json()["choices"][0]["message"]["content"].strip()
         print(f"[DEBUG] API result: {result}", flush=True)
+
+        # 評価統計保存
+        save_evaluation(age=int(result) if result.isdigit() else None, emotion=None, correct=None)
+
         return jsonify({"age": result})
     except Exception as e:
         error_detail = traceback.format_exc()

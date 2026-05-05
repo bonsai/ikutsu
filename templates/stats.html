@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モデル評価統計 - いくつに見える？</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #f8e8f0 0%, #f0d4e0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(255, 183, 197, 0.3);
+        }
+        h1 {
+            color: #d4688a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f8e8f0, #f0d4e0);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ff69b4;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #b0889a;
+            margin-top: 8px;
+        }
+        .accuracy {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff9e6, #fff3cc);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .accuracy-number {
+            font-size: 64px;
+            font-weight: 900;
+            color: #ffa500;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌸 モデル評価統計</h1>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total }}</div>
+                <div class="stat-label">総推論回数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #28a745;">{{ correct }}</div>
+                <div class="stat-label">だいたいあってる ✅</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #dc3545;">{{ wrong }}</div>
+                <div class="stat-label">ぜんぜんちがう ❌</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total|int - correct - wrong }}</div>
+                <div class="stat-label">未評価</div>
+            </div>
+        </div>
+
+        <div class="accuracy">
+            <div class="accuracy-number">{{ accuracy }}%</div>
+            <div class="stat-label">精度（だいたいあってる割合）</div>
+        </div>
+
+        <a href="/" class="back-link">← アプリに戻る</a>
+    </div>
+</body>
+</html>

@@ -157,6 +157,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10000);
     };
 
+    window.sendFeedback = function(type) {
+        const age = resultAge.textContent;
+        fetch('/feedback', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({correct: type})
+        }).then(() => {
+            // フィードバック後は自動的に戻る
+            setTimeout(() => window.retry(), 1000);
+        }).catch(err => {
+            console.error('Feedback error:', err);
+        });
+    }
+
     window.shareTwitter = function() {
         const age = resultAge.textContent;
         const baseText = `ねえあたし、いくつに見える？${age}歳に見えました🌸`;

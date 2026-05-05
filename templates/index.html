@@ -43,7 +43,13 @@
         <div class="result-age" id="resultAge">0</div>
         <div class="result-text">歳に見えます</div>
         <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="retry-btn" onclick="retry()" style="margin:0;">もう一度</button>
             <button class="retry-btn" onclick="shareTwitter()" style="margin:0; background: #1DA1F2; border-color: #1DA1F2;">Twitterでシェア</button>
+            <button class="retry-btn" onclick="sendFeedback('correct')" style="margin:0; background: #28a745; border-color: #28a745;">だいたいあってる✅</button>
+            <button class="retry-btn" onclick="sendFeedback('wrong')" style="margin:0; background: #dc3545; border-color: #dc3545;">ぜんぜんちがう❌</button>
+        </div>
+        <div style="margin-top: 15px;">
+            <a href="/stats" style="color: #667eea; text-decoration: none; font-size: 14px;">→ モデル評価統計を見る</a>
         </div>
     </div>
 
