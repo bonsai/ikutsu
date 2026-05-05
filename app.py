@@ -43,15 +43,7 @@ def estimate_age():
     img_data = file.read()
     b64_img = base64.b64encode(img_data).decode("utf-8")
 
-    # 保存截图（后续截图用）
-    import uuid
-    screenshot_dir = "static/screenshots"
-    os.makedirs(screenshot_dir, exist_ok=True)
-    screenshot_filename = f"{uuid.uuid4().hex}.jpg"
-    screenshot_path = os.path.join(screenshot_dir, screenshot_filename)
-    with open(screenshot_path, "wb") as f:
-        f.write(img_data)
-    screenshot_url = f"/static/screenshots/{screenshot_filename}"
+    # 写真は保存しない（メモリ内のみ）
 
     messages = [
         {
@@ -80,7 +72,7 @@ def estimate_age():
         resp.raise_for_status()
         result = resp.json()["choices"][0]["message"]["content"].strip()
         print(f"[DEBUG] API result: {result}", flush=True)
-        return jsonify({"age": result, "screenshot_url": screenshot_url})
+        return jsonify({"age": result})
     except Exception as e:
         error_detail = traceback.format_exc()
         print(f"[DEBUG] Error: {e}\n{error_detail}", flush=True)

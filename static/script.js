@@ -33,13 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    window.switchCamera = async function() {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-        facingMode = facingMode === 'user' ? 'environment' : 'user';
-        window.startCamera();
-    }
+    // 切り替え機能は不要
 
     window.capture = function() {
         const video = document.getElementById('cameraPreview');
@@ -79,9 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             });
             const data = await response.json();
-
-            // 保存截图URL
-            window.latestScreenshotUrl = data.screenshot_url || '';
 
             // ローディング終了（最低3秒は表示）
             setTimeout(() => {
@@ -142,38 +133,38 @@ document.addEventListener('DOMContentLoaded', function() {
         resultOverlay.classList.remove('show');
         document.getElementById('startBtn').style.display = 'block';
         resultAge.textContent = '0';
+        // 10秒後に自動的に最初に戻る
+        clearTimeout(window.autoRetryTimer);
+        window.autoRetryTimer = setTimeout(() => {
+            if (!resultOverlay.classList.contains('show')) return;
+            resultOverlay.classList.remove('show');
+            document.getElementById('startBtn').style.display = 'block';
+            resultAge.textContent = '0';
+            window.startCamera();
+        }, 10000);
+        window.startCamera();
     }
+
+    // 結果表示時にタイマーセット
+    const originalShowResult = window.showResult;
+    window.showResult = function(age) {
+        originalShowResult(age);
+        clearTimeout(window.autoRetryTimer);
+        window.autoRetryTimer = setTimeout(() => {
+            if (resultOverlay.classList.contains('show')) {
+                window.retry();
+            }
+        }, 10000);
+    };
 
     window.shareTwitter = function() {
         const age = resultAge.textContent;
         const baseText = `ねえあたし、いくつに見える？${age}歳に見えました🌸`;
-        const hashtags = `#いくつに見える #AI年齢推定`;
-
-        // 如果有截图，用截图URL；否则用当前页面URL
-        let shareUrl = window.location.href;
-        if (window.latestScreenshotUrl) {
-            shareUrl = window.location.origin + window.latestScreenshotUrl;
-        }
+        const hashtags = `#生成AIなんでも展示会\n#いくつに見える #AI年齢推定 #BonsaiApps`;
+        const shareUrl = 'https://ikutsu.onrender.com/';
 
         const fullText = `${baseText}\n${hashtags}`;
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
-    }
-
-    window.copyResult = function() {
-        const age = resultAge.textContent;
-        const text = `ねえあたし、いくつに見える？${age}歳に見えました🌸\n#いくつに見える #AI年齢推定`;
-        navigator.clipboard.writeText(text).then(() => {
-            alert('結果をコピーしました！');
-        }).catch(err => {
-            // フォールバック
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('結果をコピーしました！');
-        });
     }
 
     // フローティング桜作成（数量増加・多様な動き）
@@ -252,10 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 自动启动相机
-    window.addEventListener('load', function() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            window.startCamera();
-        }
-    });
+    // ページロード時にカメラは起動しない（はじめるボタンから）
+    // 切り替えボタンも不要なので削除
 });

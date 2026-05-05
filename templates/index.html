@@ -15,13 +15,13 @@
 
     <div class="container" id="mainContainer">
         <h1>ねえあたし、いくつに見える？</h1>
-        <p class="subtitle">カメラで写真を撮って年齢を推定</p>
+        <p class="subtitle">#生成AIなんでも展示会<br>カメラで写真を撮って年齢を推定<br>※写真は保存されません</p>
 
-        <button class="start-btn" id="startBtn" onclick="startCamera()">カメラを起動</button>
+        <button class="start-btn" id="startBtn" onclick="startCamera()">はじめる</button>
 
         <div class="camera-area" id="cameraArea">
             <video id="cameraPreview" autoplay playsinline></video>
-            <button class="switch-btn" onclick="switchCamera()">切替</button>
+            <!-- 切り替えボタン不要 -->
             <div class="capture-btn" onclick="capture()"></div>
         </div>
     </div>
@@ -43,9 +43,7 @@
         <div class="result-age" id="resultAge">0</div>
         <div class="result-text">歳に見えます</div>
         <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <button class="retry-btn" onclick="retry()" style="margin:0;">もう一度</button>
             <button class="retry-btn" onclick="shareTwitter()" style="margin:0; background: #1DA1F2; border-color: #1DA1F2;">Twitterでシェア</button>
-            <button class="retry-btn" onclick="copyResult()" style="margin:0; background: #6c5ce7; border-color: #6c5ce7;">コピー</button>
         </div>
     </div>
 
