@@ -6,6 +6,8 @@ import sys
 import base64
 import mimetypes
 import traceback
+import csv
+import datetime
 import requests
 from flask import Flask, request, render_template, jsonify
 from dotenv import load_dotenv
@@ -21,6 +23,17 @@ if not TOKEN:
 app.config['DEBUG'] = True
 API_BASE = "https://api.ai.sakura.ad.jp/v1"
 
+# 評価保存関数
+def save_evaluation(age=None, emotion=None, correct=None):
+    """評価結果をファイルに保存"""
+    log_file = "evaluations.csv"
+    file_exists = os.path.isfile(log_file)
+    with open(log_file, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(['timestamp', 'age', 'emotion', 'correct', 'client_ip'])
+        client_ip = request.remote_addr if request else 'unknown'
+        writer.writerow([datetime.datetime.now().isoformat(), age, emotion, correct, client_ip])
 
 @app.route("/")
 def index():
@@ -74,13 +87,55 @@ def estimate_age():
         print(f"[DEBUG] API result: {result}", flush=True)
 
         # 評価統計保存
-        save_evaluation(age=int(result) if result.isdigit() else None, emotion=None, correct=None)
+        try:
+            age_val = int(result) if result.isdigit() else None
+            save_evaluation(age=age_val, emotion=None, correct=None)
+        except Exception as e:
+            print(f"[DEBUG] Save evaluation error: {e}", flush=True)
 
         return jsonify({"age": result})
-    except Exception as e:
-        error_detail = traceback.format_exc()
-        print(f"[DEBUG] Error: {e}\n{error_detail}", flush=True)
-        return jsonify({"error": str(e)}), 500
+
+@app.route("/feedback", methods=["POST"])
+def feedback():
+    data = request.get_json()
+    correct = data.get("correct")  # "correct" or "wrong"
+    log_file = "evaluations.csv"
+    if os.path.isfile(log_file):
+        rows = []
+        with open(log_file, mode='r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                rows.append(row)
+        if len(rows) > 1:
+            rows[-1][3] = correct
+            with open(log_file, mode='w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerows(rows)
+    return jsonify({"status": "ok"})
+
+
+@app.route("/stats")
+def stats():
+    log_file = "evaluations.csv"
+    if not os.path.isfile(log_file):
+        return render_template("stats.html", total=0, correct=0, wrong=0, accuracy=0)
+
+    rows = []
+    with open(log_file, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append(row)
+
+    total = len(rows)
+    correct_count = sum(1 for r in rows if r.get('correct') == 'correct')
+    wrong_count = sum(1 for r in rows if r.get('correct') == 'wrong')
+    accuracy = round(correct_count / total * 100, 1) if total > 0 else 0
+
+    return render_template("stats.html",
+                       total=total,
+                       correct=correct_count,
+                       wrong=wrong_count,
+                       accuracy=accuracy)
 
 
 if __name__ == "__main__":
